@@ -1,0 +1,139 @@
+/* NOTE: code for sidebar inspired from w3schools. Link: https://www.w3schools.com/howto/howto_css_sidebar_responsive.asp  */
+
+/* Page content. The value of the margin-left property should match the value of the sidebar's width property */
+main {
+    padding: 0.5rem;
+    margin-left: 200px;
+    height: 1000px;
+}
+
+header {
+    margin: 0rem 1rem;
+    text-align: center;
+    background-size: contain;
+}
+/* The side navigation menu */
+.sidebar {
+    margin: 0;
+    padding: 0;
+    width: 200px;
+    background-color: #f1f1f1;
+    position: fixed;
+    height: 100%;
+    overflow: auto;
+  }
+  
+  /* Sidebar links */
+  .sidebar a {
+    display: block;
+    color: #fd79a8;
+    padding: 16px;
+    text-decoration: none;
+  }
+  
+  /* Links on mouse-over */
+  .sidebar a:hover {
+    background-color: #fd79a8;
+    color: white;
+  }
+  
+aside {
+    padding: 0rem 2rem;
+}
+
+footer{
+    text-align: center;
+    margin-top: 1rem;
+    display: none;
+}
+
+.bookContainer{
+    max-width: 20rem;
+    width: fit-content; 
+    height: auto; 
+    display: inline-block;
+    margin: 1rem;
+    padding: 1rem;
+}
+.bookContainer > p{
+    margin-left: 1rem;
+    font-size: 1rem;
+}
+
+.singleBook{
+    max-width: fit-content;
+}
+
+.checkoutDivs{
+    width: fit-content; 
+    height: auto; 
+    margin: 1rem 1rem;
+    padding: 0rem 1rem;
+    display: block;
+}
+
+a{
+    color: #fd79a8;
+}
+
+p{
+    color: #2d3436;
+}
+h1 {
+    text-align: center;
+    color: #e84393;
+
+}
+h2 {
+    text-align: left;
+    margin: 0.5rem;
+    padding: 0.5rem;
+    color: #e84393;
+}
+
+h3 {
+    color: #fd79a8;
+    text-align: center;
+    overflow: hidden;
+}
+h4{
+    color:#fd79a8;
+}
+
+
+input{
+    margin: 0.5rem;
+}
+
+
+table{
+    margin-bottom: 1rem;
+}
+
+td { 
+    word-break: break-all;
+}
+
+.centerContent{
+    text-align: center;
+}
+
+/* On screens that are less than 700px wide, make the sidebar into a topbar */
+@media screen and (max-width: 700px) {
+    .sidebar {
+      width: 100%;
+      height: auto;
+      position: relative;
+    }
+    .sidebar a {float: left;}
+    main {margin-left: 0;}
+  }
+  
+  /* On screens that are less than 400px, display the bar vertically, instead of horizontally */
+  @media screen and (max-width: 400px) {
+    .sidebar a {
+      text-align: center;
+      float: none;
+    }
+    
+  }

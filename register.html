@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <link rel="stylesheet" href="myStyles.css" type="text/css">
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"> 
+  <title>Famazon Book Store</title>
+</head>
+
+<script>
+  var pageKeyword = "login";
+</script>
+
+<body>
+  <header>
+    <h1 style="padding-top: 0.5rem;" >Famazon Book Store</h1>
+    <!-- // print_r($_SESSION); // for debug  -->
+    <div id = "search">
+      <input id = "searchValue" type="search" placeholder="Keyword(s)">
+      <input type="submit" onclick = "searchFunction()" value="Search">
+    </div>
+    <div id = "buttons" style="text-align: right;"></div>
+    <script>
+      displayLoginButtons()
+
+      function searchFunction(){
+        searchValue = document.getElementById("searchValue").value;
+
+        var xmlhttp = new XMLHttpRequest();   
+        
+        xmlhttp.onreadystatechange = function () {
+        if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
+          // what to do with response1
+          var searchedBooks = document.getElementById("booksDiv"); 
+          searchedBooks.innerHTML = xmlhttp.responseText;
+
+          // edit heading of 'All Books' to 'Searching Results'
+          document.getElementById("heading").innerText = "Searching Results"
+        }
+        }
+        // use POST to send credentials data to database
+        xmlhttp.open("POST", "search.php", true);   //define request 
+        xmlhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded"); // set req header
+        xmlhttp.send("searchValue=" + searchValue); // send request
+
+
+      }
+
+      function displayLoginButtons(){
+        var xmlhttp = new XMLHttpRequest();   
+        
+        xmlhttp.onreadystatechange = function () {
+        if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
+          // what to do with response1
+          var buttons = document.getElementById("buttons"); 
+          buttons.innerHTML += xmlhttp.responseText;
+        }
+        }
+        // use POST to send credentials data to database
+        xmlhttp.open("POST", "functions.php", true);   //define request 
+        xmlhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded"); // set req header
+        xmlhttp.send("function=checkLoggedIn"); // send request
+
+      }
+    </script>
+
+
+  </header>
+  <!-- end .header -->
+
+  <div class="sidebar">
+    <h2>Categories</h2>
+    <a href="cat_storybook.html">Storybook</a>
+    <a href="cat_picture.html">Picture Book</a>
+    <a href="cat_history.html">History</a>
+    <a href="cat_fiction.html">Contemporary Fiction</a>
+  </div>
+  <!-- end sidebar  -->
+  <hr/>
+  <br/>
+
+  <main>
+    <aside>
+      <nav>
+          <a href="index.html">Home</a> > <a href="register.html">Register</a>
+      </nav>
+    </aside>
+    <h2 id = "heading">Register</h2>
+    <div class="checkoutDivs" id = "booksDiv">
+      <form id="credentials"> 
+        <!-- NOTE: FORM ID was passwords -> credentials -->
+        
+      <div>
+          <label for="username">Username</label>
+          <input id="username" type="text" placeholder="Desired username" required>
+      </div>  
+      <div>
+          <label for="password">Password</label>
+          <input id="password" type="password" placeholder="Desired password" required>   
+      </div> 
+      <input type="button" onclick="location.href='login.html'" value="Back">
+      <!-- the type of button above can be submit! -->
+      <input type="button" onclick="createAccount()" value="Confirm"> 
+      </form>
+      <div id="invalidMessage"></div>
+
+    </div>
+
+    <script>
+        function checkNoEmptyFields(username,password){
+            if (username == "" || password == ""){ // if fields are empty
+                alert("Please do not leave the fields empty")
+                return false // EXIT function and DO NOT PROCESS CREDENTIALS if fields are EMPTY
+            }
+            return true;
+        }
+        function createAccount(){
+            let username = document.getElementById("username").value
+            let password = document.getElementById("password").value
+
+            if (checkNoEmptyFields(username,password)){
+                // use POST to send credentials data to database (create.php)
+                console.log("Username:",username,"password:",password)
+                
+                var xmlhttp = new XMLHttpRequest();   
+
+                xmlhttp.onreadystatechange = function () {
+                if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
+                  // what to do with response1
+                  
+                  let errorMessage = "Account already exists."
+                  if (xmlhttp.responseText.includes(errorMessage)){ //if account exists
+                    var invalidMsg = document.getElementById("invalidMessage"); 
+                    invalidMsg.innerHTML = xmlhttp.responseText;
+                    console.log("redirecting…")
+                    
+                    // wait 3 seconds // redirect to register.html
+                    setTimeout(function(){window.location="register.html";},3000);               
+                  } 
+                  else if (xmlhttp.responseText.includes("Account created! Welcome")){ // if account created, redirect --> login page
+                    var invalidMsg = document.getElementById("invalidMessage"); 
+                    invalidMsg.innerHTML = xmlhttp.responseText;
+                    console.log("redirecting (to login page)…")
+                    setTimeout(function(){window.location="login.html";},3000);               
+
+                  }
+                }
+                }
+                // use POST to send credentials data to database
+                xmlhttp.open("POST", "create.php", true);   //define request 
+                xmlhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded"); // set req header
+                xmlhttp.send("inputtedUser="  + username + "&inputtedPassword=" + password); // send request
+            }
+            else{
+                return
+            }
+
+        }
+    </script>
+
+
+    <br/>
+    <hr/>
+    
+  </main>
+  <footer>
+    <img src="images/BottomHKGS.jpg" width="780" height="20" alt="EUST footer" />
+  </footer>
+  <!-- end .footer -->
+
+</body>
+</html>

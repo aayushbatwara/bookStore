@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <link rel="stylesheet" href="myStyles.css" type="text/css">
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"> 
+  <title>Famazon Book Store</title>
+</head>
+
+<script>
+  var pageKeyword = "History";
+</script>
+
+<body>
+  <header>
+    <h1 style="padding-top: 0.5rem;" >Famazon Book Store</h1>
+    <!-- // print_r($_SESSION); // for debug  -->
+    <div id = "search">
+      <input id = "searchValue" type="search" placeholder="Keyword(s)">
+      <input type="submit" onclick = "searchFunction()" value="Search">
+    </div>
+    <div id = "buttons" style="text-align: right;"></div>
+    <script>
+      displayLoginButtons()
+
+      function searchFunction(){
+        searchValue = document.getElementById("searchValue").value;
+
+        var xmlhttp = new XMLHttpRequest();   
+        
+        xmlhttp.onreadystatechange = function () {
+        if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
+          // what to do with response1
+          var searchedBooks = document.getElementById("booksDiv"); 
+          searchedBooks.innerHTML = xmlhttp.responseText;
+
+          // edit heading of 'All Books' to 'Searching Results'
+          document.getElementById("heading").innerText = "Searching Results"
+        }
+        }
+        // use POST to send credentials data to database
+        xmlhttp.open("POST", "search.php", true);   //define request 
+        xmlhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded"); // set req header
+        xmlhttp.send("searchValue=" + searchValue); // send request
+
+
+      }
+
+      function displayLoginButtons(){
+        var xmlhttp = new XMLHttpRequest();   
+        
+        xmlhttp.onreadystatechange = function () {
+        if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
+          // what to do with response1
+          var buttons = document.getElementById("buttons"); 
+          buttons.innerHTML += xmlhttp.responseText;
+        }
+        }
+        // use POST to send credentials data to database
+        xmlhttp.open("POST", "functions.php", true);   //define request 
+        xmlhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded"); // set req header
+        xmlhttp.send("function=checkLoggedIn"); // send request
+
+      }
+    </script>
+
+
+  </header>
+  <!-- end .header -->
+
+  <div class="sidebar">
+    <h2>Categories</h2>
+    <a href="cat_storybook.html">Storybook</a>
+    <a href="cat_picture.html">Picture Book</a>
+    <a href="cat_history.html">History</a>
+    <a href="cat_fiction.html">Contemporary Fiction</a>
+  </div>
+  <!-- end sidebar  -->
+  <hr/>
+  <br/>
+  <main>
+    <aside>
+      <nav>
+          <a href="index.html">Home</a> > <a id = "navText" href="cat_storybook.html"></a>
+          <script>
+              document.getElementById("navText").innerText=pageKeyword;
+          </script>
+      </nav>
+    </aside>
+    <h2 id = "heading">All books</h2>
+    <div style="text-align: right;">
+      <input type = "button" value = "Sort by Price (Highest" onclick="sortAllBooks()">
+    </div>
+    <div id="booksDiv" >
+    </div>
+    
+  </main>
+
+  <script>
+    window.onload = function(){showAllBooks()} //show All function executes on load
+
+    function sortAllBooks(){
+      var xmlhttp = new XMLHttpRequest(); //new XMLHTTP request
+          
+          xmlhttp.onreadystatechange = function () {
+            if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
+              // what to do with response1
+              var books = document.getElementById("booksDiv"); 
+              books.innerHTML = xmlhttp.responseText;
+
+              document.getElementById("heading").innerText = "All Books (Sort by Price Highest)"
+            }
+          }
+    
+          xmlhttp.open("POST", "getBooks.php",true);   //definition of request sent thru post
+          xmlhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");  //set request header
+          xmlhttp.send("show="+pageKeyword+"&size=small&sort=true");   //send request
+
+    }
+    function showAllBooks() {
+      var xmlhttp = new XMLHttpRequest(); //new XMLHTTP request
+          
+      xmlhttp.onreadystatechange = function () {
+        if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
+          // what to do with response1
+          var books = document.getElementById("booksDiv"); 
+          books.innerHTML = xmlhttp.responseText;
+        }
+      }
+
+      xmlhttp.open("POST", "getBooks.php",true);   //definition of request sent thru post
+      xmlhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");  //set request header
+      xmlhttp.send("show="+pageKeyword+"&size=small");   //send request
+          
+    }
+
+  </script>
+
+</body>
+</html>

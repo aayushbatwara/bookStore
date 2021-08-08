@@ -1,0 +1,268 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <link rel="stylesheet" href="myStyles.css" type="text/css">
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"> 
+  <title>Famazon Book Store</title>
+</head>
+
+<script>
+    var pageKeyword = document.location.pathname.split(/(\\|\/)/g).pop()
+    pageKeyword = pageKeyword.replace(".html","");
+    console.log(pageKeyword);
+</script>
+
+<body>
+  <header>
+    <h1 style="padding-top: 0.5rem;" >Famazon Book Store</h1>
+    <!-- // print_r($_SESSION); // for debug  -->
+    <!-- <div id = "search">
+      <input id = "searchValue" type="search" placeholder="Keyword(s)">
+      <input type="submit" onclick = "searchFunction()" value="Search">
+    </div> -->
+    <div id = "buttons" style="text-align: right;"></div>
+    <script>
+      displayLoginButtons()
+
+      function searchFunction(){
+        searchValue = document.getElementById("searchValue").value;
+
+        var xmlhttp = new XMLHttpRequest();   
+        
+        xmlhttp.onreadystatechange = function () {
+        if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
+          // what to do with response1
+          var searchedBooks = document.getElementById("booksDiv"); 
+          searchedBooks.innerHTML = xmlhttp.responseText;
+
+          // edit heading of 'All Books' to 'Searching Results'
+          document.getElementById("heading").innerText = "Searching Results"
+        }
+        }
+        // use POST to send credentials data to database
+        xmlhttp.open("POST", "search.php", true);   //define request 
+        xmlhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded"); // set req header
+        xmlhttp.send("searchValue=" + searchValue); // send request
+
+
+      }
+
+      function displayLoginButtons(){
+        var xmlhttp = new XMLHttpRequest();   
+        
+        xmlhttp.onreadystatechange = function () {
+        if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
+          // what to do with response1
+          var buttons = document.getElementById("buttons"); 
+          buttons.innerHTML += xmlhttp.responseText;
+        }
+        }
+        // use POST to send credentials data to database
+        xmlhttp.open("POST", "functions.php", true);   //define request 
+        xmlhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded"); // set req header
+        xmlhttp.send("function=checkLoggedIn"); // send request
+
+      }
+    </script>
+
+
+  </header>
+  <!-- end .header -->
+
+  <div class="sidebar">
+    <h2>Categories</h2>
+    <a href="cat_storybook.html">Storybook</a>
+    <a href="cat_picture.html">Picture Book</a>
+    <a href="cat_history.html">History</a>
+    <a href="cat_fiction.html">Contemporary Fiction</a>
+  </div>
+  <!-- end sidebar  -->
+  <hr/>
+  <br/>
+  <main>
+    <aside>
+      <nav>
+          <a href="index.html">Home</a> > <a href="checkout.html" id = "navBarText">Checkout</a>
+      </nav>
+    </aside>
+    <h2 id = "heading">Checkout</h2>
+
+    <form id="checkoutForm" onsubmit='return confirmButton()' action = 'invoice.html'>
+        <div id = "accountSection" class="checkoutDivs">
+            <div style="margin-left: auto; margin-right: auto; width: fit-content; text-align: center;">
+                <div style="display: inline-block; margin-right: 1.5rem;">
+                    <h4>New customer?</h4>
+                    <p>Continue to checkout below</p>
+                </div>
+                <div style="display: inline-block;">
+                    <h4>Existing customer?</h4>
+                    <p>Sign in <a href="login.html">here</a></p>
+                </div>
+            </div>
+            
+            <h3 style="text-align: left;">Account registration</h3>
+
+            <div>
+            <label for="username">Username</label>
+            <input id="username" type="text" placeholder="Required" required oninvalid="this.setCustomValidity('Please do not leave this field empty')" oninput="this.setCustomValidity('')">
+            <span style="color: rgb(255 39 53);display: none;" id="duplicateMsg">Username duplicated!</span>
+            </div>
+            <div>
+            <label for="password">Password</label>
+            <input id="password" type="text" placeholder="Required" required oninvalid="this.setCustomValidity('Please do not leave this field empty')" oninput="this.setCustomValidity('')">
+            </div>
+
+        </div>
+        <div id="deliveryInfo" class = "checkoutDivs">
+            <h3 style="text-align: left;">Delivery Info</h3>
+            <div>
+            <label for="fullName">Full Name</label>
+            <input id="fullName" type="text" placeholder="Required" required oninvalid="this.setCustomValidity('Please do not leave this field empty')" oninput="this.setCustomValidity('')">
+            </div>
+            <div>
+            <label for="companyName">Company Name</label>
+            <input id="companyName" type="text" placeholder="">
+            </div>
+            <div>
+            <label for="address1">Address Line 1</label>
+            <input id="address1" type="text" placeholder="Required" required oninvalid="this.setCustomValidity('Please do not leave this field empty')" oninput="this.setCustomValidity('')">
+            </div>
+            <div>
+            <label for="address2">Address Line 2</label>
+            <input id="address2" type="text" placeholder="">
+            </div>
+            <div>
+            <label for="city">City</label>
+            <input id="city" type="text" placeholder="Required" required oninvalid="this.setCustomValidity('Please do not leave this field empty')" oninput="this.setCustomValidity('')">
+            </div>
+            <div>
+            <label for="region">Region/State/District</label>
+            <input id="region" type="text" placeholder="">
+            </div>
+            <div>
+            <label for="country">Country</label>
+            <input id="country" type="text" placeholder="Required" required oninvalid="this.setCustomValidity('Please do not leave this field empty')" oninput="this.setCustomValidity('')">
+            </div>
+            <div>
+            <label for="postal">Postal/Zip Code</label>
+            <input id="postal" type="text" placeholder="Required" required oninvalid="this.setCustomValidity('Please do not leave this field empty')" oninput="this.setCustomValidity('')">
+            </div>
+
+            <!-- Full name, address line 1 & 2, city, country, postcode/zipcode -->
+        </div>
+        <div id = "yourOrder"  class = "checkoutDivs">
+            <h3 style="text-align: left;">Your order</h3>
+            <p style="margin: 0rem; ">You are eligible for <b>free standard shipping!</b></p>
+            <br>
+        </div>
+        <!-- <div class="bookContainer singleBook" style="margin-top: 0; padding-top: 0;">
+        </div> -->
+    </form>
+    
+  </main>
+
+  <script>
+    window.onload = function(){     //function executes on load
+        displayAccountSection();
+        showCartDetails();
+
+        document.getElementById("username").addEventListener("blur",checkDuplicateUser);
+        document.getElementById("username").addEventListener("focus",function() {document.getElementById("duplicateMsg").style.display="none"});
+
+
+    }
+    function confirmButton(){
+      // initialize variables
+      localStorage.username = "";
+      localStorage.password = "";
+      localStorage.fullName = "";
+      localStorage.companyName = "";
+      localStorage.address1 = "";
+      localStorage.address2 = "";
+      localStorage.city = "";
+      localStorage.region = "";
+      localStorage.country = "";
+      localStorage.postal = "";
+      localStorage.yourOrderDiv = "";
+
+      // assign variables
+      if (document.getElementById("username") != null) localStorage.username = document.getElementById("username").value;
+      if (document.getElementById("password") != null) localStorage.password = document.getElementById("password").value;
+      
+      localStorage.fullName = document.getElementById("fullName").value;
+      localStorage.companyName = document.getElementById("companyName").value;
+      localStorage.address1 = document.getElementById("address1").value;
+      localStorage.address2 = document.getElementById("address2").value;
+      localStorage.city = document.getElementById("city").value;
+      localStorage.region = document.getElementById("region").value;
+      localStorage.country = document.getElementById("country").value;
+      localStorage.postal = document.getElementById("postal").value;
+      localStorage.yourOrderDiv = document.getElementById("yourOrder").innerHTML;
+
+      console.log("Redirecting…");
+    
+    }
+
+    function checkDuplicateUser(){
+        var xmlhttp = new XMLHttpRequest();   
+        
+        xmlhttp.onreadystatechange = function () {
+        if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
+            if(xmlhttp.responseText == "true"){ //if user is a duplicate
+                document.getElementById("duplicateMsg").style.display="inline";
+                document.getElementById("username").value = "";
+            }
+          else{ // new user
+          }
+        }
+        }
+        // use POST to send credentials data to database
+        xmlhttp.open("POST", "functions.php", true);   //define request 
+        xmlhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded"); // set req header
+        xmlhttp.send("function=checkDuplicateUser&username=" + document.getElementById("username").value); // send request
+    }
+
+    function displayAccountSection(){
+        var xmlhttp = new XMLHttpRequest();   
+        
+        xmlhttp.onreadystatechange = function () {
+        if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
+          // what to do with response1
+          if(xmlhttp.responseText == true){ //if user is logged in
+              document.getElementById("accountSection").innerHTML = ""; //make sure there is no contents in the account section
+          }
+          else{ //if user isn't logged in
+            console.log("user isn't logged in")
+          }
+        }
+        }
+        // use POST to send credentials data to database
+        xmlhttp.open("POST", "functions.php", true);   //define request 
+        xmlhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded"); // set req header
+        xmlhttp.send("function=checkLoggedInBoolean"); // send request
+    }
+
+    function showCartDetails() {
+      var xmlhttp = new XMLHttpRequest(); //new XMLHTTP request
+          
+      xmlhttp.onreadystatechange = function () {
+        if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
+          // what to do with response1
+          var div = document.getElementById("yourOrder"); 
+          div.innerHTML += xmlhttp.responseText;
+
+        }
+      }
+
+      xmlhttp.open("POST", "cart.php",true);   //definition of request sent thru post
+      xmlhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");  //set request header
+      xmlhttp.send("command=showCartSummary");   //send request
+          
+    }
+
+  </script>
+
+</body>
+
+</html>

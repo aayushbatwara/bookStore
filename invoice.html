@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <link rel="stylesheet" href="myStyles.css" type="text/css">
+  <style>
+    #deliveryInfo h4 {display: inline-block; margin-right: 1rem; margin-bottom: 0rem;}
+    #deliveryInfo p {display: inline-block; margin: 1rem 0rem;}
+  </style>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"> 
+  <title>Famazon Book Store</title>
+</head>
+
+<script>
+    var pageKeyword = document.location.pathname.split(/(\\|\/)/g).pop()
+    pageKeyword = pageKeyword.replace(".html","");
+    console.log(pageKeyword);
+</script>
+
+<body>
+  <header>
+    <h1 style="padding-top: 0.5rem;" >Famazon Book Store</h1>
+    <!-- // print_r($_SESSION); // for debug  -->
+    <!-- <div id = "search">
+      <input id = "searchValue" type="search" placeholder="Keyword(s)">
+      <input type="submit" onclick = "searchFunction()" value="Search">
+    </div> -->
+    <div id = "buttons" style="text-align: right;"></div>
+    <script>
+      displayLoginButtons()
+
+      function searchFunction(){
+        searchValue = document.getElementById("searchValue").value;
+
+        var xmlhttp = new XMLHttpRequest();   
+        
+        xmlhttp.onreadystatechange = function () {
+        if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
+          // what to do with response1
+          var searchedBooks = document.getElementById("booksDiv"); 
+          searchedBooks.innerHTML = xmlhttp.responseText;
+
+          // edit heading of 'All Books' to 'Searching Results'
+          document.getElementById("heading").innerText = "Searching Results"
+        }
+        }
+        // use POST to send credentials data to database
+        xmlhttp.open("POST", "search.php", true);   //define request 
+        xmlhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded"); // set req header
+        xmlhttp.send("searchValue=" + searchValue); // send request
+
+
+      }
+
+      function displayLoginButtons(){
+        var xmlhttp = new XMLHttpRequest();   
+        
+        xmlhttp.onreadystatechange = function () {
+        if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
+          // what to do with response1
+          var buttons = document.getElementById("buttons"); 
+          buttons.innerHTML += xmlhttp.responseText;
+        }
+        }
+        // use POST to send credentials data to database
+        xmlhttp.open("POST", "functions.php", true);   //define request 
+        xmlhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded"); // set req header
+        xmlhttp.send("function=checkLoggedIn"); // send request
+
+      }
+    </script>
+
+
+  </header>
+  <!-- end .header -->
+
+  <div class="sidebar">
+    <h2>Categories</h2>
+    <a href="cat_storybook.html">Storybook</a>
+    <a href="cat_picture.html">Picture Book</a>
+    <a href="cat_history.html">History</a>
+    <a href="cat_fiction.html">Contemporary Fiction</a>
+  </div>
+  <!-- end sidebar  -->
+  <hr/>
+  <br/>
+  <main>
+    <aside>
+      <nav>
+          <a href="index.html">Home</a> > <a href="invoice.html" id = "navBarText">Invoice</a>
+      </nav>
+    </aside>
+    <h2 id = "heading">Invoice</h2>
+      <div id = "deliveryInfo" class="checkoutDivs">
+        <div>
+          <h4>Full Name: </h4><p id = "fullName"></p>
+        </div>
+        <div>
+          <h4>Company name: </h4><p id = "companyName"></p>
+        </div>
+        <div>
+          <h4>Address Line 1: </h4><p id = "address1"></p>
+        </div>
+        <div>
+          <h4>Address Line 2: </h4><p id = "address2"></p>
+        </div>
+        <div>
+          <h4>City: </h4><p id = "city"></p>
+        </div>
+        <div>
+          <h4>Region: </h4><p id = "region"></p>
+        </div>
+        <div>
+          <h4>Country: </h4><p id = "country"></p>
+        </div>
+        <div>
+          <h4>Postcode: </h4><p id = "postal"></p>
+        </div>
+      </div>
+
+      <!-- Full name, address line 1 & 2, city, country, postcode/zipcode -->
+  </div>
+  <div id = "yourOrder"  class = "checkoutDivs">
+    </div>
+
+  </main>
+
+
+  <script>
+    window.onload = function(){     //function executes on load
+      parseLocalStorage();
+
+
+    }
+    function emptyCart(username,password){
+      var xmlhttp = new XMLHttpRequest(); //new XMLHTTP request
+          xmlhttp.onreadystatechange = function () {
+            if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
+              // what to do with response1
+              console.log("response from php:",xmlhttp.responseText);
+    
+            }
+          }
+    
+          xmlhttp.open("POST", "cart.php",true);   //definition of request sent thru post
+          xmlhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");  //set request header
+          xmlhttp.send("command=emptyCart");   //send request
+
+      // make sure to reset cart qty via database
+      // do this buy re-displaying the login buttons
+      document.getElementById("cartQty").innerText = "0";
+
+    }
+    function createAccount(username,password){
+      // use POST to send credentials data to database (create.php)
+      console.log("Username:",username,"password:",password)
+      
+      var xmlhttp = new XMLHttpRequest();   
+
+      xmlhttp.onreadystatechange = function () {
+      if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
+        // what to do with response1
+        if (xmlhttp.responseText.includes("Account created! Welcome")){ // if account created, redirect --> login page
+
+          console.log("Account created!")
+
+          }
+        else{
+          console.log("Account was not created because it exists")
+        }
+        }
+        }
+        // use POST to send credentials data to database
+        xmlhttp.open("POST", "create.php", true);   //define request 
+        xmlhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded"); // set req header
+        xmlhttp.send("inputtedUser="  + username + "&inputtedPassword=" + password); // send request
+
+        }
+    function parseLocalStorage(){
+      console.log("local storage looking…")
+
+
+      for (let i = 0; i < localStorage.length; i++) {
+        key = localStorage.key(i);
+        value = localStorage.getItem(key);
+        if (value == ""){
+          console.log("Replacing " + key)
+          localStorage.setItem(key,"N/A");
+        }
+        
+      }
+      if (localStorage.username !=  "N/A"){
+        console.log(localStorage.username,localStorage.password)
+        console.log("create account!");
+        createAccount(localStorage.username,localStorage.password);
+      }
+      document.getElementById("fullName").innerText = localStorage.fullName;
+      document.getElementById("companyName").innerText = localStorage.companyName;
+      document.getElementById("address1").innerText = localStorage.address1;
+      document.getElementById("address2").innerText = localStorage.address2;
+      document.getElementById("city").innerText = localStorage.city;
+      document.getElementById("region").innerText = localStorage.region;
+      document.getElementById("country").innerText =localStorage.country;
+      document.getElementById("postal").innerText = localStorage.postal;
+      document.getElementById("yourOrder").innerHTML = localStorage.yourOrderDiv;
+
+      let yourOrder = document.getElementById("yourOrder");
+      yourOrder.removeChild(yourOrder.lastElementChild);
+      yourOrder.removeChild(yourOrder.lastElementChild);
+      yourOrder.removeChild(yourOrder.children[1]);
+      yourOrder.removeChild(yourOrder.children[1]);
+      yourOrder.innerHTML += `<input type="button" value="OK" onclick="window.location='index.html'">`;
+      // localStorage.clear();
+
+      emptyCart(localStorage.username,localStorage.password);
+    }
+  </script>
+
+</body>
+
+</html>
+

@@ -1,5 +1,4 @@
-# Online Book Store
-## Aayush Batwara, June 2021
+# Online Book Store | Aayush Batwara | June 2021
 
 ### Link
 
